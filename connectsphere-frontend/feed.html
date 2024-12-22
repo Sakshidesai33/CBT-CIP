@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectSphere - Feed</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .post {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .profile-pic {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        .post-content {
+            margin-top: 10px;
+        }
+
+        .post-footer {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .comment {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .comment img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>ConnectSphere Feed</h2>
+
+        <!-- Create Post Section -->
+        <div class="form-group">
+            <textarea id="post-content" class="form-control" rows="3" placeholder="Write something..." required></textarea>
+        </div>
+        <button id="create-post" class="btn btn-info">Post</button>
+
+        <div id="post-feed">
+            <!-- Posts will be dynamically added here -->
+        </div>
+
+        <button onclick="window.location.href='profile.html'" class="btn btn-secondary">Go to Profile</button>
+        <button onclick="window.location.href='messaging.html'" class="btn btn-secondary">Go to Messages</button>
+    </div>
+
+    <script>
+        // Load posts from localStorage and display them
+        const postFeed = document.getElementById('post-feed');
+
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            postFeed.innerHTML = '';  // Clear existing posts
+
+            posts.forEach((post, index) => {
+                const postDiv = document.createElement('div');
+                postDiv.classList.add('post');
+                postDiv.innerHTML = `
+                    <div class="post-header">
+                        <img src="${post.profilePic}" alt="Profile" class="profile-pic">
+                        <strong>${post.username}</strong>
+                        <button class="btn btn-info btn-sm" onclick="likePost(${index})">Like</button>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    <div class="post-footer">
+                        <span id="like-count-${index}">${post.likes}</span> Likes
+                        <button class="btn btn-info btn-sm" onclick="toggleCommentSection(${index})">Comment</button>
+                    </div>
+
+                    <div id="comments-section-${index}" style="display: none;">
+                        <div id="comments-list-${index}" class="comments-list">
+                            <!-- Display Comments -->
+                            ${post.comments.map(comment => `
+                                <div class="comment">
+                                    <img src="${post.profilePic}" alt="Profile" class="profile-pic">
+                                    <span><strong>${post.username}:</strong> ${comment}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <textarea id="comment-text-${index}" class="form-control" rows="2" placeholder="Add a comment..."></textarea>
+                        <button class="btn btn-secondary btn-sm" onclick="addComment(${index})">Add Comment</button>
+                    </div>
+                    <hr>
+                `;
+                postFeed.appendChild(postDiv);
+            });
+        }
+
+        // Create a new post
+        document.getElementById('create-post').addEventListener('click', function() {
+            const postContent = document.getElementById('post-content').value;
+            const username = JSON.parse(localStorage.getItem('user')).username; // Get logged-in username
+            const profilePic = JSON.parse(localStorage.getItem('user')).profilePic || 'default-profile-pic.jpg'; // Profile picture
+
+            if (postContent) {
+                const newPost = { 
+                    username, 
+                    content: postContent, 
+                    likes: 0, 
+                    comments: [],
+                    profilePic
+                };
+
+                // Save new post to localStorage
+                const posts = JSON.parse(localStorage.getItem('posts')) || [];
+                posts.push(newPost);
+                localStorage.setItem('posts', JSON.stringify(posts));
+
+                // Clear input field and reload posts
+                document.getElementById('post-content').value = '';
+                loadPosts();
+            }
+        });
+
+        // Like a post
+        function likePost(postIndex) {
+            const posts = JSON.parse(localStorage.getItem('posts'));
+            posts[postIndex].likes++;
+            localStorage.setItem('posts', JSON.stringify(posts));
+            loadPosts();
+        }
+
+        // Toggle comment section visibility
+        function toggleCommentSection(postIndex) {
+            const commentSection = document.getElementById(`comments-section-${postIndex}`);
+            commentSection.style.display = (commentSection.style.display === 'none') ? 'block' : 'none';
+        }
+
+        // Add comment to a post
+        function addComment(postIndex) {
+            const commentText = document.getElementById(`comment-text-${postIndex}`).value;
+
+            if (commentText) {
+                const posts = JSON.parse(localStorage.getItem('posts'));
+                posts[postIndex].comments.push(commentText);
+                localStorage.setItem('posts', JSON.stringify(posts));
+
+                // Clear comment input and reload posts
+                document.getElementById(`comment-text-${postIndex}`).value = '';
+                loadPosts();
+            }
+        }
+
+        // Load posts on page load
+        window.onload = loadPosts;
+    </script>
+
+</body>
+</html>

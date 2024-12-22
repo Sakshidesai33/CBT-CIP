@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectSphere - Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: 90%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Login to Your Account</h2>
+
+                        <!-- Error message box -->
+                        <div id="error-message" class="error-message">
+                            Invalid username or password.
+                        </div>
+
+                        <!-- Login Form -->
+                        <form id="login-form">
+                            <div class="form-group">
+                                <label for="login-username">Username</label>
+                                <input type="text" id="login-username" class="form-control" placeholder="Enter your username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">Password</label>
+                                <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
+
+                        <!-- Register link -->
+                        <p class="register-link">Don't have an account? <a href="register.html">Register</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle user login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent form from refreshing the page
+
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            // Get stored users data from localStorage
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const foundUser = users.find(user => user.username === username && user.password === password);
+
+            if (foundUser) {
+                // If user is found and credentials match
+                alert('Login successful!');
+
+                // Store user data in localStorage (optional, for session purposes)
+                localStorage.setItem('user', JSON.stringify(foundUser));
+
+                // Redirect to the profile page
+                window.location.href = 'profile.html'; // Change to your actual profile page path
+            } else {
+                // If credentials do not match
+                document.getElementById('error-message').style.display = 'block';
+            }
+        });
+    </script>
+
+</body>
+</html>

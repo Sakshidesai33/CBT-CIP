@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectSphere - Profile</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .img-thumbnail {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Buttons Styling */
+        .btn {
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card {
+                width: 95%;
+            }
+        }
+
+        /* Edit Profile Form Styling */
+        #edit-form {
+            display: none;
+            margin-top: 20px;
+        }
+        #edit-form input, #edit-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h2 class="card-title">Your Profile</h2>
+
+            <!-- Profile Picture Section -->
+            <div class="text-center mb-3">
+                <img id="profile-img" src="default-profile.png" alt="Profile Picture" class="img-thumbnail">
+                <br>
+                <input type="file" id="profile-pic" accept="image/*" onchange="uploadProfilePicture()">
+            </div>
+
+            <p id="profile-username"></p>
+            <p id="profile-email"></p>
+
+            <!-- Edit Profile Button -->
+            <button class="btn btn-info" onclick="enableEdit()">Edit Profile</button>
+            <!-- Logout Button -->
+            <button class="btn btn-danger" onclick="confirmLogout()">Logout</button>
+
+            <!-- Edit Profile Form -->
+            <div id="edit-form">
+                <h3>Edit Profile</h3>
+                <form id="profile-edit-form">
+                    <div class="form-group">
+                        <label for="edit-username">Username</label>
+                        <input type="text" id="edit-username">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-email">Email</label>
+                        <input type="email" id="edit-email">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-bio">Bio</label>
+                        <textarea id="new-bio" placeholder="Update your bio"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info">Save Changes</button>
+                    <button type="button" class="btn btn-danger" onclick="cancelEdit()">Cancel</button>
+                </form>
+            </div>
+
+            <!-- Bio Update Section -->
+            <div id="bio-section">
+                <form id="edit-profile-form">
+                    <label for="new-bio">Bio:</label>
+                    <textarea id="new-bio" placeholder="Update your bio"></textarea>
+                    <button type="submit" class="btn btn-info">Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <button class="btn btn-info" onclick="window.location.href='feed.html'">Go to Feed</button>
+            <button class="btn btn-info" onclick="window.location.href='messaging.html'">Go to Messages</button>
+        </div>
+    </div>
+
+    <script>
+        // Load user data from localStorage and display on the profile page
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser) {
+            document.getElementById('profile-username').textContent = `Username: ${storedUser.username}`;
+            document.getElementById('profile-email').textContent = `Email: ${storedUser.email}`;
+
+            // Pre-fill the form with current profile data
+            document.getElementById('edit-username').value = storedUser.username;
+            document.getElementById('edit-email').value = storedUser.email;
+
+            // Load the bio from localStorage if it exists
+            const storedBio = localStorage.getItem('bio');
+            if (storedBio) {
+                document.getElementById('new-bio').value = storedBio;
+            }
+        } else {
+            alert('Please log in to view your profile.');
+            window.location.href = 'login.html';  // Redirect to login page
+        }
+
+        // Handle user logout with confirmation
+        function confirmLogout() {
+            if (confirm("Are you sure you want to logout?")) {
+                logout();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html'; // Redirect to login page
+        }
+
+        // Allow users to upload a profile picture
+        function uploadProfilePicture() {
+            const file = document.getElementById('profile-pic').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profile-img').src = e.target.result;
+                    // Save the image URL in localStorage
+                    localStorage.setItem('profilePic', e.target.result);
+                };
+                reader.readAsDataURL(file); // Convert the image to a base64 string
+            }
+        }
+
+        // If a profile picture exists in localStorage, display it
+        window.onload = function() {
+            const storedProfilePic = localStorage.getItem('profilePic');
+            if (storedProfilePic) {
+                document.getElementById('profile-img').src = storedProfilePic;
+            }
+        }
+
+        // Enable the user to edit their profile information
+        function enableEdit() {
+            document.getElementById('edit-form').style.display = 'block'; // Show the form
+        }
+
+        // Handle form submission for profile editing
+        document.getElementById('profile-edit-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting normally
+
+            const newUsername = document.getElementById('edit-username').value;
+            const newEmail = document.getElementById('edit-email').value;
+            const newBio = document.getElementById('new-bio').value;
+
+            if (newUsername && newEmail) {
+                // Save updated data to localStorage
+                storedUser.username = newUsername;
+                storedUser.email = newEmail;
+                localStorage.setItem('user', JSON.stringify(storedUser));
+
+                // Save the new bio
+                if (newBio) {
+                    localStorage.setItem('bio', newBio);
+                }
+
+                // Update profile page
+                document.getElementById('profile-username').textContent = `Username: ${storedUser.username}`;
+                document.getElementById('profile-email').textContent = `Email: ${storedUser.email}`;
+                alert('Profile updated successfully!');
+                document.getElementById('edit-form').style.display = 'none'; // Hide the form
+            }
+        });
+
+        // Cancel the editing
+        function cancelEdit() {
+            document.getElementById('edit-form').style.display = 'none'; // Hide the form
+        }
+    </script>
+
+</body>
+</html>

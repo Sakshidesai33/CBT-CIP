@@ -1,0 +1,230 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: url('assets/default-profile.png'); /* Path to your background image in assets folder */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Centered container for all pages */
+.container {
+    max-width: 600px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Heading Styles */
+h1, h2 {
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    color: #66ccff;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Input Fields */
+input[type="text"], input[type="email"], input[type="password"], input[type="submit"] {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+input[type="submit"] {
+    background-color: #66ccff;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #3399cc;
+}
+
+/* Links */
+a {
+    color: #66ccff;
+    text-decoration: none;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Profile Page Styles */
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.profile h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.profile p {
+    font-size: 1rem;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.profile button {
+    padding: 10px 20px;
+    background-color: #66ccff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile button:hover {
+    background-color: #3399cc;
+}
+
+/* Feed Page Styles */
+.feed-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.feed-post {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.feed-post h3 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.feed-post p {
+    font-size: 1rem;
+    color: #ddd;
+}
+
+.feed-post .actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.feed-post button {
+    background-color: #66ccff;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.feed-post button:hover {
+    background-color: #3399cc;
+}
+
+/* Message Page Styles */
+.message-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 70vh;
+    overflow-y: scroll;
+}
+
+.message {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.message-sender {
+    font-weight: bold;
+    color: #66ccff;
+}
+
+.message-text {
+    color: #ddd;
+}
+
+#message-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#message-form input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#message-form button {
+    padding: 10px 15px;
+    background-color: #66ccff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
+#message-form button:hover {
+    background-color: #3399cc;
+}
+
+/* Common Button Style */
+button {
+    padding: 10px 20px;
+    background-color: #66ccff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3399cc;
+}
+
